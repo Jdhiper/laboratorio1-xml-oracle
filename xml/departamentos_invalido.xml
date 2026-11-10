@@ -1,0 +1,18 @@
+<Departamentos xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="http://localhost/hr/departamentos.xsd">
+  <Departamento id="999">
+    <Ubicacion>
+      <Ciudad>Pasto</Ciudad>
+      <Pais>Colombia</Pais>
+    </Ubicacion>
+    <Empleados>
+      <Empleado id="9001">
+        <Nombre>Juan</Nombre>
+        <Email>juan.zambrano</Email>
+        <FechaContratacion>09/11/2026</FechaContratacion>
+        <Puesto>Analista</Puesto>
+        <Salario>-1500</Salario>
+      </Empleado>
+    </Empleados>
+  </Departamento>
+</Departamentos>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Laboratorio 1 - Esquema XML: departamentos del esquema HR con su ubicación
+  y sus empleados (combina DEPARTMENTS, LOCATIONS, COUNTRIES, EMPLOYEES y JOBS).
+  Autor: Juan Diego Zambrano Guerrero
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+
+  <!-- ===== Tipos simples con restricciones ===== -->
+  <xs:simpleType name="tTexto20">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="20"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tTexto25">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="25"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tTexto40">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="40"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- El email en HR es el usuario en mayúsculas (ej. SKING) -->
+  <xs:simpleType name="tTexto60">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="60"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tEmail">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Z0-9_]{1,25}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tSalario">
+    <xs:restriction base="xs:decimal">
+      <xs:minExclusive value="0"/>
+      <xs:totalDigits value="8"/>
+      <xs:fractionDigits value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tComision">
+    <xs:restriction base="xs:decimal">
+      <xs:minInclusive value="0"/>
+      <xs:maxExclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- ===== Tipos complejos ===== -->
+  <xs:complexType name="tUbicacion">
+    <xs:sequence>
+      <xs:element name="Ciudad" type="tTexto40"/>
+      <xs:element name="Pais"   type="tTexto60"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tEmpleado">
+    <xs:sequence>
+      <xs:element name="Nombre"            type="tTexto20" minOccurs="0"/>
+      <xs:element name="Apellido"          type="tTexto25"/>
+      <xs:element name="Email"             type="tEmail"/>
+      <xs:element name="FechaContratacion" type="xs:date"/>
+      <xs:element name="Puesto"            type="tTexto40"/>
+      <xs:element name="Salario"           type="tSalario"/>
+      <xs:element name="Comision"          type="tComision" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="tEmpleados">
+    <xs:sequence>
+      <xs:element name="Empleado" type="tEmpleado" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tDepartamento">
+    <xs:sequence>
+      <xs:element name="Ubicacion" type="tUbicacion"/>
+      <xs:element name="Empleados" type="tEmpleados"/>
+    </xs:sequence>
+    <xs:attribute name="id"     type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="nombre" type="tTexto40"           use="required"/>
+  </xs:complexType>
+
+  <!-- ===== Elemento raíz ===== -->
+  <xs:element name="Departamentos">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Departamento" type="tDepartamento" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+    <!-- Los identificadores de departamento y de empleado no se repiten -->
+    <xs:unique name="uqDepartamento">
+      <xs:selector xpath="Departamento"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+    <xs:unique name="uqEmpleado">
+      <xs:selector xpath="Departamento/Empleados/Empleado"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+  </xs:element>
+
+</xs:schema>
